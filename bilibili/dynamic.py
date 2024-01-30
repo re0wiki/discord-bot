@@ -15,6 +15,9 @@ client = discord.Client(intents=intents)
 guild_id = "779185920670171136"
 
 def get_image_content_from_url(url):
+    if url.split(".")[-1] == "gif":
+        return 0
+    
     r = requests.get(url, headers=headers)
     if r.status_code != 200:
         return -1
@@ -60,8 +63,13 @@ async def on_message(message):
         
     files = []
     need_stop = False
+    has_gif = False
     for pic in dynamic["pics"]:
         content = get_image_content_from_url(pic["src"])
+        if content == 0:
+            has_gif = True
+            continue
+
         if content == -1:
             await message.channel.send("获取动态图片失败")
             need_stop = True
@@ -72,10 +80,12 @@ async def on_message(message):
         return
         
     text = f'{dynamic["content"]}\n发布时间: {dynamic["pub_time"]}'
+    if has_gif:
+        text += "\n【含gif，请前往原动态查看】"
 
     webhook = await message.channel.create_webhook(name="BilibiliDynamicRewrite")
     await webhook.send(content=text, files=files, avatar_url=dynamic["avatar"], username=dynamic["username"])
     await webhook.delete()
         
 
-client.run("") # discord bot token
+client.run("")
