@@ -78,4 +78,4 @@ async def on_message(message):
     await webhook.delete()
         
 
-client.run("OTE0ODIwMjI2ODE2ODA2OTM2.G8Ensc.LEsf53MZaC-eXoD5LnqXFCMSMLzLufo1MzkOoI")
+client.run("") # discord bot token
